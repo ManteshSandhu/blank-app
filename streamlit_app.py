@@ -3,9 +3,18 @@ import docker
 import os
 import time
 
-# Initialize the Docker client with the default socket (mounted via /var/run/docker.sock)
+# Debug: Check if the Docker socket exists
+socket_path = "/var/run/docker.sock"
+if not os.path.exists(socket_path):
+    st.error(f"Docker socket not found at {socket_path}. Ensure the socket is mounted with -v /var/run/docker.sock:/var/run/docker.sock.")
+    st.stop()
+
+# Initialize the Docker client
 try:
     client = docker.DockerClient(base_url='unix:///var/run/docker.sock')
+    # Test the connection by fetching the Docker version
+    version = client.version()
+    st.write(f"Connected to Docker daemon. Docker version: {version['Version']}")
 except Exception as e:
     st.error(f"Failed to connect to Docker: {e}")
     st.stop()
