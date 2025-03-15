@@ -3,9 +3,9 @@ import docker
 import os
 import time
 
-# Initialize the Docker client
+# Initialize the Docker client with the default socket (mounted via /var/run/docker.sock)
 try:
-    client = docker.from_client()
+    client = docker.DockerClient(base_url='unix:///var/run/docker.sock')
 except Exception as e:
     st.error(f"Failed to connect to Docker: {e}")
     st.stop()
